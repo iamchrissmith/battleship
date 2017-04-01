@@ -28,21 +28,23 @@ describe Display do
 
   describe ".get_instructions" do
     context "when the player enters 'i' from the main screen" do
-      it "displays instructions on screen" do
+      it "returns instructions from file" do
         expected = File.read('./lib/instructions.txt')
         expect(subject.get_instructions).to eq(expected)
       end
     end
   end
 
-  describe 'capture_user_input' do
-    it "should return user input command" do
-      allow($stdin).to receive(:gets).and_return('i')
-      expect(subject.get_user_input).to be == 'i'
-      allow($stdin).to receive(:gets).and_return('p')
-      expect(subject.get_user_input).to be == 'p'
-      allow($stdin).to receive(:gets).and_return('q')
-      expect(subject.get_user_input).to be == 'q'
+  describe '.capture_user_input' do
+    context "ask for the user's input" do
+      it "should return user input command" do
+        allow($stdin).to receive(:gets).and_return('i')
+        expect(subject.get_user_input).to be == 'i'
+        allow($stdin).to receive(:gets).and_return('p')
+        expect(subject.get_user_input).to be == 'p'
+        allow($stdin).to receive(:gets).and_return('q')
+        expect(subject.get_user_input).to be == 'q'
+      end
     end
   end
 end
