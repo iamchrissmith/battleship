@@ -1,0 +1,21 @@
+Welcome to Battleship.
+
+You can press return to return to the main screen at any time.
+
+The games sequence is as follows:
+- The computer will layout its ships.
+- You will be asked to place your ships (i.e. A1 A2 for the two length ship)
+- Then we will play.
+- You will go first.
+- We will display the board.
+- Then ask you for the position you want to fire at (A1)
+- We will tell you if it was a hit or miss and update the map.
+
+Then the computer will go:
+- We will show you your map
+- The computer will tell you where it fired
+- We will tell you whether it is a hit or a miss and update the map.
+
+Once someone's ships are all sunk, the game is over.
+
+Good Luck!
