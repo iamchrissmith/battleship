@@ -3,11 +3,11 @@ require "./lib/display"
 
 describe Display do
 
-  class DummyBattleship
+  class DummyGame
     include Display
   end
 
-  subject { DummyBattleship.new }
+  subject { DummyGame.new }
 
   describe ".welcome_message" do
     context "when the player first runs the program" do

@@ -1,8 +1,8 @@
 require 'spec_helper'
-require "./lib/battleship"
+require "./lib/game"
 
 describe do
 
-  before { @b = Battleship.new }
+  before { @game = Game.new }
 
 end

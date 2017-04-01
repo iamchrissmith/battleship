@@ -2,7 +2,7 @@ require 'pry'
 require "colorize"
 require './lib/display'
 
-class Battleship
+class Game
   include Display
 
   def run
@@ -30,9 +30,4 @@ class Battleship
 
   def start_game
   end
-end
-
-if __FILE__ == $0
-  game = Battleship.new
-  game.run
 end
