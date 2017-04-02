@@ -1,7 +1,7 @@
 require 'spec_helper'
 require "./lib/game"
 
-describe do
+describe Game do
 
   before { @game = Game.new }
 
