@@ -2,12 +2,11 @@ require './lib/square'
 require './lib/ship'
 
 class Board
-  attr_reader :size, :root
+  attr_reader :size, :root, :ships
   def initialize(size)
     @size = size
     @root = nil
-    @ships = {player: [], comp: []}
-    # build_board
+    @ships = []
   end
 
   def build_board
@@ -36,27 +35,37 @@ class Board
     end
   end
 
+  def place_ship(locations)
+    # find start of ship square
+    squares = locations.map do |location|
+      translate_location(location)
+    end
+    ship = Ship.new(squares)
+    @ships << ship
+    squares.each do |square|
+      square.ship = ship
+    end
+    ship
+    # create new Ship and pass start square and other locations (as array)
+  end
 
-
-  # I should move this to inside the square itself
-  # Maybe still have a jump_to_square function here
   def jump_to_square(row, column, square = @root)
-    return nil if row >= @size || column >= @size
-    
-    until square.row == row
-      square = square.neighbors[:below] if square.row < row
-      square = square.neighbors[:above] if square.row > row
-    end
-    until square.column == column
-      square = square.neighbors[:right] if square.column < column
-      square = square.neighbors[:left] if square.column > column
-    end
-    square
+    square.find_square(row, column, square)
   end
 
   def all_sunk?
-    player = @ships[:player].all? { |ship| ship.sunk?}
-    comp = @ships[:comp].all? { |ship| ship.sunk? }
-    player || comp
+    @ships.all? { |ship| ship.sunk?}
+  end
+
+  private
+  def letter_to_number(letter)
+    alphabet = ("a".."z").to_a
+    alphabet.index(letter)
+  end
+  def translate_location(readable)
+    coordinates = readable.split('')
+    row = letter_to_number(coordinates[0].downcase)
+    column = coordinates[1].to_i - 1
+    jump_to_square(row, column)
   end
 end

@@ -32,8 +32,13 @@ class Game
   def start_game
     # Ask how hard in the future
     difficulty = 4
-    board = Board.new(4)
-    board.build_board
+    player = Player.new("Human")
+    player.board = Board.new(difficulty)
+    player.board.build_board
+    computer = AI.new("AI")
+    computer.board = Board.new(difficulty)
+    computer.board.build_board
+    ship_placement(player, computer)
     # root = board.jump_to_square(1,1)
     # root_row = root.row
     # root_column = root.column
