@@ -1,3 +1,5 @@
+require 'humanize'
+
 module Display
   def welcome_message
     message = "Welcome to BATTLESHIP".blue.bold.underline

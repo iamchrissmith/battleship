@@ -6,3 +6,4 @@ gem "pry-state"
 gem "pry-byebug"
 gem "colorize"
 gem 'simplecov'
+gem 'humanize'

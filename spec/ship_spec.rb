@@ -1,5 +1,5 @@
 require 'spec_helper'
-require "./lib/ship"
+
 
 describe Ship do
 
@@ -21,21 +21,21 @@ describe Ship do
 
   subject { Ship.new([@square_1, @square_2]) }
 
-  describe "initialize" do
+  describe ".initialize" do
     context "when a new ship is created" do
       it "is a ship" do
         expect(subject.class).to eq(Ship)
       end
-      it "has a length" do
+      it "has a #length" do
         expect(subject.length).to eq(2)
       end
-      it "has zero hits" do
+      it "has zero #hits" do
         expect(subject.hits).to eq(0)
       end
     end
   end
 
-  describe "sunk?" do
+  describe ".sunk?" do
     context "when a ship gets hit" do
       it "knows if it is sunk" do
         subject.hits += 1
@@ -50,11 +50,17 @@ describe Ship do
 
   describe "location" do
     context "a square can be assigned to ship's location" do
-      it "knows which squares it is on" do
+      it "knows which #squares it is on" do
         subject.squares.each do |square|
           expect(square.class).to eq(DummySquare)
         end
       end
+    end
+  end
+
+  describe "#length" do
+    it "knows its #length from #squares" do
+      expect(subject.length).to be 2
     end
   end
 

@@ -2,9 +2,13 @@ require 'pry'
 require "colorize"
 require './lib/display'
 require './lib/board'
+require './lib/ai'
+require './lib/human'
 
 class Game
   include Display
+  # Start times
+  # Moves
 
   def run
     clear_screen
@@ -30,34 +34,23 @@ class Game
   end
 
   def start_game
-    # Ask how hard in the future
+    # Ask how hard in the future (Beginner: size = 4 ships = 2)
     difficulty = 4
-    player = Player.new("Human")
-    player.board = Board.new(difficulty)
-    player.board.build_board
+    num_ships = 2
+    human = Human.new("Human")
     computer = AI.new("AI")
-    computer.board = Board.new(difficulty)
-    computer.board.build_board
-    ship_placement(player, computer)
-    # root = board.jump_to_square(1,1)
-    # root_row = root.row
-    # root_column = root.column
-    # left = root.neighbors[:left]
-    # left_row = left.row
-    # left_column = left.column
-    # right = root.neighbors[:right]
-    # right_row = right.row
-    # right_column = right.column
-    # above = root.neighbors[:above]
-    # above_row = above.row
-    # above_column = above.column
-    # below = root.neighbors[:below]
-    # below_row = below.row
-    # below_column = below.column
-    # puts "Root: #{root_row}, #{root_column}"
-    # puts "Left: #{left_row}, #{left_column}"
-    # puts "Right: #{right_row}, #{right_column}"
-    # puts "Above: #{above_row}, #{above_column}"
-    # puts "Below: #{below_row}, #{below_column}"
+    players = [computer, human]
+    players.each do |player|
+      player.board = Board.new(difficulty)
+      player.board.build_board
+      player.before_ship_placement_message
+      ship_placement(player, num_ships)
+      player.after_ship_placement_message
+    end
+  end
+
+  def ship_placement(player, num_ships)
+    clear_screen
+    player.generate_ships(num_ships)
   end
 end

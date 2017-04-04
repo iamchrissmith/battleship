@@ -5,7 +5,6 @@ class Ship
     @squares = squares
     @length = @squares.length
     @hits = 0
-    # @owner = owner
   end
 
   def sunk?

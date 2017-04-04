@@ -18,16 +18,11 @@ class Board
           square = @root
         else
           square = Square.new(row,column)
-
           if column > 0
-            left = grid[row][column-1]
-            square.neighbors[:left] = left
-            left.neighbors[:right] = square
+            assign_horizontal_neighbor(row, column, square, grid)
           end
           if row > 0
-            above = grid[row-1][column]
-            square.neighbors[:above] = above
-            above.neighbors[:below] = square
+            assign_vertical_neighbor(row, column, square, grid)
           end
         end
         grid[row][column] = square
@@ -35,8 +30,19 @@ class Board
     end
   end
 
+  def assign_horizontal_neighbor(row, column, square, grid)
+    left = grid[row][column-1]
+    square.neighbors[:left] = left
+    left.neighbors[:right] = square
+  end
+
+  def assign_vertical_neighbor(row, column, square, grid)
+    above = grid[row-1][column]
+    square.neighbors[:above] = above
+    above.neighbors[:below] = square
+  end
+
   def place_ship(locations)
-    # find start of ship square
     squares = locations.map do |location|
       translate_location(location)
     end
@@ -46,7 +52,6 @@ class Board
       square.ship = ship
     end
     ship
-    # create new Ship and pass start square and other locations (as array)
   end
 
   def jump_to_square(row, column, square = @root)
@@ -57,15 +62,21 @@ class Board
     @ships.all? { |ship| ship.sunk?}
   end
 
-  private
-  def letter_to_number(letter)
-    alphabet = ("a".."z").to_a
-    alphabet.index(letter)
+  def letter_rows
+    rows = ("A".."Z").to_a
+    rows.slice(0...@size)
   end
+
+  def letter_to_number(letter)
+    alphabet = letter_rows
+    alphabet.index(letter.upcase)
+  end
+
   def translate_location(readable)
-    coordinates = readable.split('')
-    row = letter_to_number(coordinates[0].downcase)
-    column = coordinates[1].to_i - 1
+    row = letter_to_number(readable[0])
+    column = readable[1].to_i - 1
     jump_to_square(row, column)
   end
+
+  # private
 end

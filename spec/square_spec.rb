@@ -1,5 +1,4 @@
 require 'spec_helper'
-require "./lib/square"
 
 describe Square do
 
@@ -12,9 +11,9 @@ describe Square do
 
   subject { Square.new(0,0) }
 
-  describe "initialize" do
+  describe ".initialize" do
     context "when the square is created" do
-      it "it has a row and column" do
+      it "it has a #row and #column" do
         expect(subject.class).to eq(Square)
         expect(subject.row).to eq(0)
         expect(subject.column).to eq(0)
@@ -97,7 +96,7 @@ describe Square do
   end
 
   describe ".hit?" do
-    context "schrodinger's square" do
+    context "schrodinger's #status" do
       it "is neither hit or missed before asked" do
         expect(subject.status).to be_nil
       end
@@ -106,25 +105,16 @@ describe Square do
       it "reports a miss" do
         expect(subject.ship).to be_nil
         expect(subject.hit?).to be false
+        expect(subject.status).to eq :miss
       end
     end
     context "when there is a ship" do
       before {subject.ship = DummyShip.new}
       it "reports a hit" do
         expect(subject.hit?).to be true
+        expect(subject.status).to eq(:hit)
         expect(subject.ship.hits).to be(1)
       end
     end
   end
-
-  describe "add_ship" do
-    context "a square can hold a ship" do
-      it "returns the ships location" do
-
-      end
-      it "assigns itself and neighbors to ship's location" do
-      end
-    end
-  end
-
 end
