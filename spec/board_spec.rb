@@ -67,11 +67,8 @@ describe Board do
         expect(subject.ships[0]).to eq(@new_ship)
         expect(subject.ships[0].class).to eq(Ship)
       end
-      it "assigns the squares to the ship" do
-        expect(subject.ships[0].squares[0].row).to eq(0)
-        expect(subject.ships[0].squares[0].column).to eq(0)
-        expect(subject.ships[0].squares[1].row).to eq(0)
-        expect(subject.ships[0].squares[1].column).to eq(1)
+      it "assigns the life to the ship" do
+        expect(subject.ships[0].life).to eq(2)
       end
       it "assigns the ship to the squares" do
         expect(subject.jump_to_square(0,0).ship).to eq(@new_ship)
@@ -104,7 +101,7 @@ describe Board do
     context "once all ships are sunk" do
       before {
         subject.ships.each do |ship|
-          ship.hits = ship.length
+          ship.life = 0
         end
       }
       it "is true when all ships are .sunk?" do

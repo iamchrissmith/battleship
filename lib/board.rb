@@ -7,7 +7,11 @@ class Board
     @size = size
     @root = nil
     @ships = []
-    @sunk_ships = @ships.count { |ship| ship.sunk? }
+    @sunk_ships = count_sunk_ships
+  end
+
+  def count_sunk_ships
+    @ships.count { |ship| ship.sunk? }
   end
 
   def build_board
@@ -47,7 +51,7 @@ class Board
     squares = locations.map do |location|
       translate_location(location)
     end
-    ship = Ship.new(squares)
+    ship = Ship.new(squares.length)
     @ships << ship
     squares.each do |square|
       square.ship = ship

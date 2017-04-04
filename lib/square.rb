@@ -28,7 +28,7 @@ class Square
       false
     else
       @status = :hit
-      @ship.hits += 1
+      @ship.life -= 1
       true
     end
   end

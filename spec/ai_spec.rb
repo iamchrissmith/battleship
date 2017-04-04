@@ -28,6 +28,12 @@ describe AI do
           expect(["1","2","3","4"]).to include(subject.get_first_location[1])
         end
       end
+      before {subject.board.jump_to_square(0,0).ship = Ship.new(1)}
+      it "should not already be occupied" do
+        100.times do
+          expect(subject.get_first_location).not_to eq(["A","1"])
+        end
+      end
     end
   end
 
@@ -70,6 +76,18 @@ describe AI do
         expect(subject.find_direction(2, ["B","2"])).to include("right")
       end
     end
+    context "AI ships cannot overlap" do
+      before do
+        subject.board.place_ship(["B1","B2","B3","B4"])
+        subject.board.place_ship(["C2","D2"])
+      end
+      it "will not find overlapping horizontal locations" do
+        expect(subject.find_direction(2, ["C","1"])).not_to include("up")
+        expect(subject.find_direction(2, ["C","1"])).not_to include("right")
+        expect(subject.find_direction(2, ["D","3"])).not_to include("left")
+        expect(subject.find_direction(2, ["A","2"])).not_to include("down")
+      end
+    end
   end
 
   describe ".populate_locations" do
@@ -92,8 +110,8 @@ describe AI do
     context "AI can generate and place ships" do
       it "assigns ships to board" do
         expect(subject.board.ships.length).to be 2
-        expect(subject.board.ships[0].length).to be 2
-        expect(subject.board.ships[1].length).to be 3
+        expect(subject.board.ships[0].life).to be 2
+        expect(subject.board.ships[1].life).to be 3
       end
     end
   end

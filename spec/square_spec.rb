@@ -2,13 +2,6 @@ require 'spec_helper'
 
 describe Square do
 
-  class DummyShip
-    attr_accessor :hits
-    def initialize
-      @hits = 0
-    end
-  end
-
   subject { Square.new(0,0) }
 
   describe ".initialize" do
@@ -109,11 +102,11 @@ describe Square do
       end
     end
     context "when there is a ship" do
-      before {subject.ship = DummyShip.new}
+      before {subject.ship = Ship.new(2)}
       it "reports a hit" do
         expect(subject.hit?).to be true
         expect(subject.status).to eq(:hit)
-        expect(subject.ship.hits).to be(1)
+        expect(subject.ship.life).to be(1)
       end
     end
   end

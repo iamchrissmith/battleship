@@ -1,13 +1,15 @@
 class Ship
-  attr_reader :length, :squares
-  attr_accessor :hits
-  def initialize(squares)
-    @squares = squares
-    @length = @squares.length
-    @hits = 0
+  # attr_reader :length, :squares
+  # attr_accessor :hits, :life
+  attr_accessor :life
+  def initialize (life)
+    @life = life
+    # @squares = squares
+    # @length = length
+    # @hits = 0
   end
 
   def sunk?
-    @hits == @length
+    @life == 0
   end
 end

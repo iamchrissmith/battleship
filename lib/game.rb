@@ -52,7 +52,9 @@ class Game
       player.board = Board.new(difficulty)
       player.board.build_board
       player.before_ship_placement_message
+      sleep 0.5
       ship_placement(player, num_ships)
+      sleep 0.5
       player.after_ship_placement_message
     end
     play_game(players)

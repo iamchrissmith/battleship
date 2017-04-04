@@ -1,4 +1,6 @@
+require './lib/validate_module'
 class Player
+  include Validate
   attr_reader :name
   attr_accessor :board
 
@@ -24,7 +26,7 @@ class Player
     square = board.translate_location(where)
     square.hit?
   end
-
+  ###### Move to subclasses
   def get_target
     row = get_random_row
     column = get_random_column
@@ -42,6 +44,8 @@ class Player
   def get_random_column
     (rand(board.size) + 1).to_s
   end
+
+  ##########
 
   def generate_ships(number)
     length = 2

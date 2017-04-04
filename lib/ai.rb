@@ -41,22 +41,15 @@ class AI < Player
     end
   end
 
-  def find_direction(length, start)
-    directions = []
-    directions << "up" if can_go_up?(start[0], length)
-    directions << "down" if can_go_down?(start[0], length)
-    directions << "left" if can_go_left?(start[1], length)
-    directions << "right" if can_go_right?(start[1], length)
-    directions.shuffle!
-  end
-
   def get_first_location
-    row = get_random_row
-    column = get_random_column
+    not_occupied = false
+    until not_occupied
+      row = get_random_row
+      column = get_random_column
+      not_occupied = location_not_occupied?("#{row}#{column}")
+    end
     [row, column]
   end
-
-  private
 
   def our_rows
     board.letter_rows
@@ -70,22 +63,5 @@ class AI < Player
 
   def get_random_column
     (rand(board.size) + 1).to_s
-  end
-
-  def can_go_up?(row, length)
-    rows = our_rows
-    index = rows.index(row) + 1
-    index - length >= 0
-  end
-  def can_go_down?(row, length)
-    rows = our_rows
-    index = rows.index(row)
-    index + length <= board.size
-  end
-  def can_go_left?(column, length)
-    column.to_i - length >= 0
-  end
-  def can_go_right?(column, length)
-    column.to_i + length <= board.size
   end
 end

@@ -83,13 +83,13 @@ describe Display do
     end
     context "display initial board row" do
       it "should output empty row" do
-        expect(subject.get_board_row(0, @owner)).to eq(" 0             ")
+        expect(subject.get_board_row(0, @owner)).to eq(" A             ")
       end
     end
     context ".get_shot_square" do
       before do
         @hit_square = @owner.board.jump_to_square(0,0)
-        @hit_square.ship = Ship.new([@hit_square])
+        @hit_square.ship = Ship.new(1)
         @hit_square.hit?
       end
       it "should return H" do
