@@ -35,18 +35,15 @@ class Human < Player
 
   def validate_group(coordinates, length)
     sequential = coordinates_sequential?(coordinates)
-    # raise InvalidLocation.new("Location must be sequential in order (i.e. A1 A2 not A2 A1).", coordinates.join(" ")) if !sequential
     if !sequential
       puts "Location must be sequential in order (i.e. A1 A2 not A2 A1)."
       return false
     end
     long_enough = coordinates.length - length
     if (long_enough < 0)
-      # raise InvalidLocation.new("Too Short. This is a #{length.humanize}-unit ship", coordinates.join(" "))
       puts "Too Short. This is a #{length.humanize}-unit ship"
       return false
     elsif (long_enough > 0)
-      # raise InvalidLocation.new("Too Long. This is a #{length.humanize}-unit ship", coordinates.join(" "))
       puts "Too Long. This is a #{length.humanize}-unit ship"
       return false
     end
@@ -62,7 +59,6 @@ class Human < Player
   end
 
   def validate_location(text)
-    # raise InvalidLocation.new("Location can only be 2 chars long.", text) unless text.length == 2
     unless text.length == 2
       puts "Location can only be 2 chars long."
       return false
@@ -70,9 +66,11 @@ class Human < Player
     coordinates = text.split('')
     row = coordinates[0].upcase
     valid_row = validate_row(row)
+    return false unless valid_row
     column = coordinates[1]
-    valid_row = validate_column(column)
-    # raise InvalidLocation.new("Ships cannot overlap.", text) unless location_not_occupied?(text)
+    valid_column = validate_column(column)
+    return false unless valid_column
+
     unless location_not_occupied?(text)
       puts "Ships cannot overlap."
       return false
@@ -92,12 +90,10 @@ class Human < Player
       puts "First Char must be a Letter"
       return false
     end
-    # raise InvalidLocation.new("First Char must be a Letter", row) unless row.is_a? String
     unless board.letter_to_number(row).is_a? Integer
       puts "First Char must be on the board"
       return false
     end
-    # raise InvalidLocation.new("First Char must be on the board", row) unless board.letter_to_number(row).is_a? Integer
     true
   end
 
@@ -106,7 +102,6 @@ class Human < Player
       puts "2nd Char must be on the board"
       return false
     end
-    # raise InvalidLocation.new("2nd Char must be on the board", column) unless ("1"..board.size.to_s).include?(column)
     true
   end
 end

@@ -1,5 +1,3 @@
-require "./lib/errors"
-
 class Player
   attr_reader :name
   attr_accessor :board
