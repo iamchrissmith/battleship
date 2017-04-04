@@ -19,6 +19,30 @@ class Player
     raise NotImplementedError
   end
 
+  def shoot
+    where = get_target
+    square = board.translate_location(where)
+    square.hit?
+  end
+
+  def get_target
+    row = get_random_row
+    column = get_random_column
+    "#{row}#{column}"
+  end
+  def our_rows
+    board.letter_rows
+  end
+  def get_random_row
+    random = rand(board.size)
+    rows = our_rows
+    rows[random]
+  end
+
+  def get_random_column
+    (rand(board.size) + 1).to_s
+  end
+
   def generate_ships(number)
     length = 2
     number.times do |n|

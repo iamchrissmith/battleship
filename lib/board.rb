@@ -2,11 +2,12 @@ require './lib/square'
 require './lib/ship'
 
 class Board
-  attr_reader :size, :root, :ships
+  attr_reader :size, :root, :ships, :sunk_ships
   def initialize(size)
     @size = size
     @root = nil
     @ships = []
+    @sunk_ships = @ships.count { |ship| ship.sunk? }
   end
 
   def build_board

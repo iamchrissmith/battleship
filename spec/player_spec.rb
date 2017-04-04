@@ -29,13 +29,20 @@ describe Player do
     end
   end
 
-
   describe ".send_ship" do
     context "pass locations" do
       it "should add ship to board" do
         subject.send_ship(["A1","A2"])
         expect(subject.board.ships[0].class).to be(Ship)
         expect(subject.board.ships[0].length).to be(2)
+      end
+    end
+  end
+
+  describe ".shoot" do
+    context "player firing sequence" do
+      it "asks the square if it is hit?" do
+        expect
       end
     end
   end

@@ -4,6 +4,7 @@ SimpleCov.start do
   add_filter '/test/'
 end
 require 'pry'
+require 'stringio'
 require "./lib/game"
 require "./lib/display"
 require "./lib/board"

@@ -78,13 +78,13 @@ class Human < Player
     true
   end
 
-
   def location_not_occupied?(readable)
     square = board.translate_location(readable)
     square.ship.nil?
   end
 
   private
+
   def validate_row(row)
     unless row.is_a? String
       puts "First Char must be a Letter"
