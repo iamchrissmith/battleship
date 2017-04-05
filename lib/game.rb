@@ -5,12 +5,17 @@ require './lib/board'
 require './lib/ai'
 require './lib/human'
 
+
+# Refactor to allow A1 to stay A1 instead of changing to 0,0
+
 class Game
   include Display
 
   def initialize
     @moves = {}
     @start_time = Time.new
+    @log = []
+    @players = []
   end
 
   def run
@@ -25,12 +30,15 @@ class Game
     when "p" then start_game
     when "i" then display_instructions
     when "q" then quit_game
-    else
-      puts "Invalid Command".red.bold
-      cmd
-      sleep 0.5
-      run
+    else warn_invalid_response(cmd)
     end
+  end
+
+  def warn_invalid_response(cmd)
+    puts "Invalid Command".red.bold
+    cmd
+    sleep 0.5
+    run
   end
 
   def quit_game
@@ -46,63 +54,75 @@ class Game
     # Ask how hard in the future (Beginner: size = 4 ships = 2)
     difficulty = 4
     num_ships = 2
-    human = Human.new("Human")
-    computer = AI.new("AI")
-    players = [human, computer]
-    players.reverse.each do |player|
+    board_options = [difficulty, num_ships]
+    make_players
+    make_boards(board_options)
+    play_game
+  end
+
+  def make_players
+    @players << Human.new("Human")
+    @players << AI.new("AI")
+  end
+
+  def make_boards(options)
+    @players.reverse.each do |player|
       @moves[player.name] = 0
-      player.board = Board.new(difficulty)
-      player.board.build_board
+      player.board = Board.new(options[0])
+      player.build_board
       player.before_ship_placement_message
       sleep 0.5
-      ship_placement(player, num_ships)
+      ship_placement(player, options[1])
       sleep 0.5
       player.after_ship_placement_message
       sleep 0.5
       clear_screen
     end
-    play_game(players)
   end
 
   def ship_placement(player, num_ships)
     player.generate_ships(num_ships)
   end
 
-  def notify_all_sunk(players)
-    players.any? do |player|
+  def notify_all_sunk
+    @players.any? do |player|
       player.board.all_sunk?
     end
   end
 
-  def play_game(players)
-    render_grids(players)
-    winner = find_winner(players)
-    end_game_sequence(players, winner)
+  def play_game
+    render_grids
+    winner = find_winner
+    end_game_sequence(winner)
   end
 
-  def find_winner(players)
+  def find_winner
     loop do
-      players.each.with_index do |player, index|
-        target = players[1] if index == 0
-        target = players[0] if index == 1
+      @players.each.with_index do |player, index|
+        sleep 1
+        target = @players.fetch(index + 1, @players[0])
         shot = player.shoot(target)
         @moves[player.name] += 1
-        puts "Move #{@moves[player.name]} :: #{player.name} : #{shot[0]} : Hit? #{shot[1]} | @ #{target.name}"
-        render_grids(players)
-        sleep 1
-        if notify_all_sunk(players)
+        write_to_log(player.name, shot)
+        render_grids
+        if notify_all_sunk
           return player
         end
       end
     end
   end
 
-  def end_game_sequence(players, winner)
+  def write_to_log(name, shot)
+    @log << [@moves[name], name, shot[0], shot[1]]
+  end
+
+  def end_game_sequence(winner)
     end_time = Time.new
     minutes = "#{((end_time - @start_time) / 60).to_i} min"
     seconds = " and #{((end_time - @start_time) % 60).to_i} sec"
-    render_grids(players)
+    render_grids
     puts "#{winner.name} won the game in #{@moves[winner.name]} moves and #{minutes} #{seconds}."
+    print @log
     exit
   end
 end

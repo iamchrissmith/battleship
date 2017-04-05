@@ -17,22 +17,24 @@ class Board
   def build_board
     grid = Array.new(@size) { Array.new(@size) { '' } }
     @size.times do |row|
-      @size.times do |column|
-        if @root.nil?
-          @root = Square.new(row,column)
-          square = @root
-        else
-          square = Square.new(row,column)
-          if column > 0
-            assign_horizontal_neighbor(row, column, square, grid)
-          end
-          if row > 0
-            assign_vertical_neighbor(row, column, square, grid)
-          end
-        end
-        grid[row][column] = square
-      end
+      build_row(row, grid)
     end
+  end
+
+  def build_row(row, grid)
+    @size.times do |column|
+      build_square(row, column, grid)
+    end
+  end
+
+  def build_square(row,column,grid)
+    letter_row = get_letter(row)
+    # square = Square.new(letter_row,column)
+    square = Square.new(row,column)
+    @root = square if @root.nil?
+    assign_horizontal_neighbor(row, column, square, grid) if column > 0
+    assign_vertical_neighbor(row, column, square, grid) if row > 0
+    grid[row][column] = square
   end
 
   def assign_horizontal_neighbor(row, column, square, grid)
@@ -72,6 +74,11 @@ class Board
     rows.slice(0...@size)
   end
 
+  def get_letter(index)
+    alphabet = letter_rows
+    alphabet[index]
+  end
+
   def letter_to_number(letter)
     alphabet = letter_rows
     alphabet.index(letter.upcase)
@@ -82,6 +89,4 @@ class Board
     column = readable[1].to_i - 1
     jump_to_square(row, column)
   end
-
-  # private
 end

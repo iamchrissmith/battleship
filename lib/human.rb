@@ -24,4 +24,15 @@ class Human < Player
     end
     coordinates.map { |coordinate| coordinate.split('')}
   end
+
+  def get_target
+    puts "Enter the squares you would like to shoot (i.e. A1)"
+    not_fired_at = false
+    until not_fired_at
+      target_text = get_user_input
+      return if target_text == ''
+      not_fired_at = location_not_targeted?(target_text)
+    end
+    target_text
+  end
 end

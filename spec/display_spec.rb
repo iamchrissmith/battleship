@@ -34,7 +34,7 @@ describe Display do
     end
   end
 
-  describe '.capture_user_input' do
+  describe '.get_user_input' do
     context "ask for the user's input" do
       it "should return user input command" do
         allow($stdin).to receive(:gets).and_return('i')
@@ -79,7 +79,7 @@ describe Display do
     before do
       @owner = Human.new("Human")
       @owner.board = Board.new(4)
-      @owner.board.build_board
+      @owner.build_board
     end
     context "display initial board row" do
       it "should output empty row" do

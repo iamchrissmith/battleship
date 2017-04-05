@@ -34,11 +34,8 @@ class Square
   end
 
   def go_in(here, there, *directions)
-    if here < there
-      directions[1]
-    elsif here > there
-      directions[0]
-    end
+    return directions[1] if here < there
+    return directions[0] if here > there
   end
 
   def find_square(row, column, square = self)

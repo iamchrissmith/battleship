@@ -85,9 +85,9 @@ module Display
     output
   end
 
-  def render_grids (players)
-    own = players[0]
-    opponent = players[1]
+  def render_grids
+    own = @players[0]
+    opponent = @players[1]
     length = own.board.size
     # clear_screen
     puts board_boundary(length) + "\t" + board_boundary(length)

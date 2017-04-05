@@ -20,14 +20,18 @@ class AI < Player
 
   def get_locations(length)
     start = get_first_location
-    ordinal_options = valid_directions(length, start)
+    ordinal_options = valid_directions(length, start).shuffle
     where_to = ordinal_options[0]
-    locations = [start]
-    locations = populate_locations(start, where_to, length, locations)
+    locations = populate_locations(start, where_to, length, [start])
+    get_locations(length) if locations.length == 0
+    sort_found_locations(locations)
+  end
+
+  def sort_found_locations(locations)
     locations.sort { |a,b| [ a[1], a[0] ] <=> [ b[1], b[0] ] }
   end
 
-  def populate_locations(start, direction, length, locations = [])
+  def populate_locations(start, direction, length, locations)
     next_loc = move(start,direction)
     locations << next_loc
     if locations.length < length
@@ -35,7 +39,7 @@ class AI < Player
     end
     locations
   end
-
+# use smart squares' navigations
   def move(current, direction)
     case direction
     when "up"
@@ -54,13 +58,23 @@ class AI < Player
   end
 
   def get_first_location
-    not_occupied = false
-    until not_occupied
+    occupied = true
+    while occupied
       row = get_random_row
       column = get_random_column
-      not_occupied = location_not_occupied?("#{row}#{column}")
+      occupied = location_occupied?("#{row}#{column}")
     end
     [row, column]
+  end
+
+  def get_target
+    not_fired_at = false
+    until not_fired_at
+      row = get_random_row
+      column = get_random_column
+      not_fired_at = location_not_targeted?("#{row}#{column}")
+    end
+    "#{row}#{column}"
   end
 
   def our_rows

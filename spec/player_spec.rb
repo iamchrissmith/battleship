@@ -4,7 +4,7 @@ describe Player do
 
   subject { Player.new("Test") }
 
-  before {subject.board = Board.new(4); subject.board.build_board}
+  before {subject.board = Board.new(4); subject.build_board}
 
   describe ".initialize" do
     context "when the player is created" do

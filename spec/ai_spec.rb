@@ -4,7 +4,7 @@ describe AI do
 
   subject { AI.new("Test") }
 
-  before {subject.board = Board.new(4); subject.board.build_board}
+  before {subject.board = Board.new(4); subject.build_board}
 
   describe ".initialize" do
     context "when the AI is created" do
