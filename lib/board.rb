@@ -7,10 +7,10 @@ class Board
     @size = size
     @root = nil
     @ships = []
-    @sunk_ships = count_sunk_ships
   end
 
-  def count_sunk_ships
+  def sunk_ships
+    return 0 if @ships.length == 0
     @ships.count { |ship| ship.sunk? }
   end
 

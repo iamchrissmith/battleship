@@ -85,9 +85,11 @@ module Display
     output
   end
 
-  def render_grids (own, opponent)
+  def render_grids (players)
+    own = players[0]
+    opponent = players[1]
     length = own.board.size
-    clear_screen
+    # clear_screen
     puts board_boundary(length) + "\t" + board_boundary(length)
     puts board_owner(own.name, length) + "\t" + board_owner(opponent.name, length)
     puts board_columns(length) + "\t" + board_columns(length)

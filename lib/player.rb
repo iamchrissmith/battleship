@@ -21,15 +21,20 @@ class Player
     raise NotImplementedError
   end
 
-  def shoot
-    where = get_target
-    square = board.translate_location(where)
-    square.hit?
+  def shoot(target)
+    where = target.get_target
+    square = target.board.translate_location(where)
+    success = square.hit?
+    [where, success]
   end
   ###### Move to subclasses
   def get_target
-    row = get_random_row
-    column = get_random_column
+    not_fired_at = false
+    until not_fired_at
+      row = get_random_row
+      column = get_random_column
+      not_fired_at = location_not_targeted?("#{row}#{column}")
+    end
     "#{row}#{column}"
   end
   def our_rows

@@ -1,5 +1,5 @@
 module Validate
-  def find_direction(length, start)
+  def valid_directions(length, start)
     directions = []
     directions << "up" if can_go_up?(start, length)
     directions << "down" if can_go_down?(start, length)
@@ -11,42 +11,15 @@ module Validate
     directions.shuffle!
   end
 
-  def can_go_up?(start, length)
-    rows = our_rows
-    index = rows.index(start[0]) + 1
-    return false if index - length < 0
-    locations = populate_locations(start, "up", length, [start])
-    return false unless no_overlap?(locations)
-    true
-  end
-
-  def can_go_down?(start, length)
-    rows = our_rows
-    index = rows.index(start[0])
-    return false if index + length > board.size
-    locations = populate_locations(start, "down", length, [start])
-    return false unless no_overlap?(locations)
-    true
-  end
-
-  def can_go_left?(start, length)
-    return false if start[1].to_i - length < 0
-    locations = populate_locations(start, "left", length, [start])
-    return false unless no_overlap?(locations)
-    true
-  end
-
-  def can_go_right?(start, length)
-    return false if start[1].to_i + length > board.size
-    locations = populate_locations(start, "right", length, [start])
-    return false unless no_overlap?(locations)
-    true
-  end
-
   def no_overlap?(potential_locations)
     potential_locations.all? do |location|
       location_not_occupied?("#{location[0]}#{location[1]}")
     end
+  end
+
+  def location_not_targeted?(readable)
+    square = board.translate_location(readable)
+    square.status.nil?
   end
 
   def location_not_occupied?(readable)
@@ -54,23 +27,20 @@ module Validate
     square.ship.nil?
   end
 
-  ####
-
   def validate_each_coordinate(coordinates)
-    each_valid = coordinates.all? do |coordinate|
+    coordinates.all? do |coordinate|
       validate_location(coordinate)
     end
-    return each_valid if !each_valid
-    each_valid
   end
 
   def validate_group(coordinates, length)
-    sequential = coordinates_sequential?(coordinates)
-    if !sequential
-      puts "Location must be sequential in order (i.e. A1 A2 not A2 A1)."
-      return false
-    end
-    long_enough = coordinates.length - length
+    entered_length = coordinates.length
+    sequential?(coordinates) && long_enough?(entered_length, length)
+  end
+
+  def long_enough?(entered, length)
+    long_enough = entered - length
+    return true if (long_enough == 0)
     if (long_enough < 0)
       puts "Too Short. This is a #{length.humanize}-unit ship"
       return false
@@ -78,7 +48,14 @@ module Validate
       puts "Too Long. This is a #{length.humanize}-unit ship"
       return false
     end
-    sequential && (long_enough == 0)
+  end
+
+  def sequential?(coordinates)
+    if coordinates_sequential?(coordinates)
+      return true
+    end
+    puts "Location must be sequential in order (i.e. A1 A2 not A2 A1)."
+    false
   end
 
   def coordinates_sequential?(coordinates)
@@ -129,4 +106,37 @@ module Validate
     true
   end
 
+  # Could be private
+
+  def can_go_up?(start, length)
+    rows = our_rows
+    index = rows.index(start[0]) + 1
+    return false if index - length < 0
+    locations = populate_locations(start, "up", length, [start])
+    return false unless no_overlap?(locations)
+    true
+  end
+
+  def can_go_down?(start, length)
+    rows = our_rows
+    index = rows.index(start[0])
+    return false if index + length > board.size
+    locations = populate_locations(start, "down", length, [start])
+    return false unless no_overlap?(locations)
+    true
+  end
+
+  def can_go_left?(start, length)
+    return false if start[1].to_i - length < 0
+    locations = populate_locations(start, "left", length, [start])
+    return false unless no_overlap?(locations)
+    true
+  end
+
+  def can_go_right?(start, length)
+    return false if start[1].to_i + length > board.size
+    locations = populate_locations(start, "right", length, [start])
+    return false unless no_overlap?(locations)
+    true
+  end
 end

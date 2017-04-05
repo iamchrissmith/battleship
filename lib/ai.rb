@@ -2,13 +2,25 @@ require './lib/player'
 
 class AI < Player
 
+  def before_ship_placement_message
+    print "Thinking..."
+    3.times do
+      sleep 0.25
+      print "..."
+    end
+    sleep 0.25
+    puts "..."
+    sleep 0.5
+  end
+
   def after_ship_placement_message
     puts "I have laid out my ships on the grid."
+    sleep 0.5
   end
 
   def get_locations(length)
     start = get_first_location
-    ordinal_options = find_direction(length, start)
+    ordinal_options = valid_directions(length, start)
     where_to = ordinal_options[0]
     locations = [start]
     locations = populate_locations(start, where_to, length, locations)

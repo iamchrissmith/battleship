@@ -9,11 +9,11 @@ class Human < Player
     puts "You now need to layout your two ships."
     puts "The first is two units long and the second is three units long."
     puts "The grid has A1 at the top left and D4 at the bottom right."
+    puts "==============================================================="
   end
 
   def get_locations(length)
     valid_coordinates = false
-    clear_screen
     until valid_coordinates
       puts "Enter the squares for the #{length.humanize}-unit ship:"
       coordinates_text = get_user_input

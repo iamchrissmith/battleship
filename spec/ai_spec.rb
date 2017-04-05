@@ -55,25 +55,25 @@ describe AI do
     end
   end
 
-  describe ".find_direction" do
+  describe ".valid_directions" do
     context "AI must have valid ship alignment" do
       it "returns valid directions for A1" do
-        expect(subject.find_direction(2, ["A","1"])).to include("down")
-        expect(subject.find_direction(2, ["A","1"])).to include("right")
-        expect(subject.find_direction(2, ["A","1"])).not_to include("up")
-        expect(subject.find_direction(2, ["A","1"])).not_to include("left")
+        expect(subject.valid_directions(2, ["A","1"])).to include("down")
+        expect(subject.valid_directions(2, ["A","1"])).to include("right")
+        expect(subject.valid_directions(2, ["A","1"])).not_to include("up")
+        expect(subject.valid_directions(2, ["A","1"])).not_to include("left")
       end
       it "returns valid directions for D4" do
-        expect(subject.find_direction(2, ["D","4"])).to include("up")
-        expect(subject.find_direction(2, ["D","4"])).to include("left")
-        expect(subject.find_direction(2, ["D","4"])).not_to include("down")
-        expect(subject.find_direction(2, ["D","4"])).not_to include("right")
+        expect(subject.valid_directions(2, ["D","4"])).to include("up")
+        expect(subject.valid_directions(2, ["D","4"])).to include("left")
+        expect(subject.valid_directions(2, ["D","4"])).not_to include("down")
+        expect(subject.valid_directions(2, ["D","4"])).not_to include("right")
       end
       it "returns valid directions for B2" do
-        expect(subject.find_direction(2, ["B","2"])).to include("up")
-        expect(subject.find_direction(2, ["B","2"])).to include("left")
-        expect(subject.find_direction(2, ["B","2"])).to include("down")
-        expect(subject.find_direction(2, ["B","2"])).to include("right")
+        expect(subject.valid_directions(2, ["B","2"])).to include("up")
+        expect(subject.valid_directions(2, ["B","2"])).to include("left")
+        expect(subject.valid_directions(2, ["B","2"])).to include("down")
+        expect(subject.valid_directions(2, ["B","2"])).to include("right")
       end
     end
     context "AI ships cannot overlap" do
@@ -82,10 +82,10 @@ describe AI do
         subject.board.place_ship(["C2","D2"])
       end
       it "will not find overlapping horizontal locations" do
-        expect(subject.find_direction(2, ["C","1"])).not_to include("up")
-        expect(subject.find_direction(2, ["C","1"])).not_to include("right")
-        expect(subject.find_direction(2, ["D","3"])).not_to include("left")
-        expect(subject.find_direction(2, ["A","2"])).not_to include("down")
+        expect(subject.valid_directions(2, ["C","1"])).not_to include("up")
+        expect(subject.valid_directions(2, ["C","1"])).not_to include("right")
+        expect(subject.valid_directions(2, ["D","3"])).not_to include("left")
+        expect(subject.valid_directions(2, ["A","2"])).not_to include("down")
       end
     end
   end

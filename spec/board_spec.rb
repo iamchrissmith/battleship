@@ -88,24 +88,28 @@ describe Board do
     end
   end
 
-  describe ".all_sunk?" do
+  describe "sinking ships" do
     before {
       subject.place_ship([["A","1"], ["A","2"]])
       subject.place_ship([["B","1"], ["B","2"]])
     }
-    context "initially no ships are sunk" do
-      it "is false when empty and when a ship is still floating" do
-        expect(subject.all_sunk?).to be false
-      end
-    end
-    context "once all ships are sunk" do
-      before {
-        subject.ships.each do |ship|
-          ship.life = 0
+    describe ".all_sunk? and #sunk_ships" do
+      context "initially no ships are sunk" do
+        it "is false when empty and when a ship is still floating" do
+          expect(subject.all_sunk?).to be false
+          expect(subject.sunk_ships).to eq 0
         end
-      }
-      it "is true when all ships are .sunk?" do
-        expect(subject.all_sunk?).to be true
+      end
+      context "once all ships are sunk" do
+        before {
+          subject.ships.each do |ship|
+            ship.life = 0
+          end
+        }
+        it "is true when all ships are .sunk?" do
+          expect(subject.all_sunk?).to be true
+          expect(subject.sunk_ships).to eq 2
+        end
       end
     end
   end

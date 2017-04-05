@@ -7,8 +7,11 @@ require './lib/human'
 
 class Game
   include Display
-  # Start times
-  # Moves
+
+  def initialize
+    @moves = {}
+    @start_time = Time.new
+  end
 
   def run
     clear_screen
@@ -39,16 +42,15 @@ class Game
   end
 
   def start_game
+    clear_screen
     # Ask how hard in the future (Beginner: size = 4 ships = 2)
     difficulty = 4
     num_ships = 2
     human = Human.new("Human")
     computer = AI.new("AI")
-    players = {
-      opponent: computer,
-      own: human
-    }
-    players.each do |k, player|
+    players = [human, computer]
+    players.reverse.each do |player|
+      @moves[player.name] = 0
       player.board = Board.new(difficulty)
       player.board.build_board
       player.before_ship_placement_message
@@ -56,40 +58,51 @@ class Game
       ship_placement(player, num_ships)
       sleep 0.5
       player.after_ship_placement_message
+      sleep 0.5
+      clear_screen
     end
     play_game(players)
   end
 
   def ship_placement(player, num_ships)
-    clear_screen
     player.generate_ships(num_ships)
   end
 
   def notify_all_sunk(players)
-    return true if players[:opponent].board.all_sunk?
-    return true if players[:own].board.all_sunk?
-    false
+    players.any? do |player|
+      player.board.all_sunk?
+    end
   end
 
   def play_game(players)
-    render_grids(players[:own], players[:opponent])
-    one_sunk = false
-    until one_sunk
-      sleep 0.5
-      players.each do |key, player|
-        player.shoot
-        render_grids(players[:own], players[:opponent])
+    render_grids(players)
+    winner = find_winner(players)
+    end_game_sequence(players, winner)
+  end
+
+  def find_winner(players)
+    loop do
+      players.each.with_index do |player, index|
+        target = players[1] if index == 0
+        target = players[0] if index == 1
+        shot = player.shoot(target)
+        @moves[player.name] += 1
+        puts "Move #{@moves[player.name]} :: #{player.name} : #{shot[0]} : Hit? #{shot[1]} | @ #{target.name}"
+        render_grids(players)
+        sleep 1
         if notify_all_sunk(players)
-          one_sunk = true
+          return player
         end
       end
     end
-    # if !notify_all_sunk(players)
-      # play_game(players)
-    # else
-    render_grids(players[:own], players[:opponent])
-    quit_game
-      # end game sequence
-    # end
+  end
+
+  def end_game_sequence(players, winner)
+    end_time = Time.new
+    minutes = "#{((end_time - @start_time) / 60).to_i} min"
+    seconds = " and #{((end_time - @start_time) % 60).to_i} sec"
+    render_grids(players)
+    puts "#{winner.name} won the game in #{@moves[winner.name]} moves and #{minutes} #{seconds}."
+    exit
   end
 end
