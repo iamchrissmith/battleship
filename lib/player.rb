@@ -11,6 +11,7 @@ class Player
   attr_accessor :board
   def_delegator :@board, :build_board
   def_delegator :@board, :all_sunk?
+  def_delegator :@board, :split_location
   def_delegator :@board, :translate_location
   def_delegator :@board, :letter_rows, :our_rows
   def_delegator :@board, :letter_to_number

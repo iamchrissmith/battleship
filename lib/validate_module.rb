@@ -11,7 +11,8 @@ module Validate
 
   def no_overlap?(potential_locations)
     potential_locations.none? do |location|
-      location_occupied?("#{location[0]}#{location[1]}")
+      row, column = split_location(location)
+      location_occupied?("#{row}#{column}")
     end
   end
 
@@ -37,14 +38,12 @@ module Validate
   end
 
   def validate_location(text)
-    return !!error_only_two_char unless text.length == 2
+    # return !!error_only_two_char unless text.length == 2
     text = text.upcase
+    row, column = split_location(text)
     # break these into series of helper methods
-    row = text[0].upcase
     valid_row = validate_row(row)
     return false unless valid_row
-
-    column = text[1]
     valid_column = validate_column(column)
     return false unless valid_column
 
@@ -73,7 +72,8 @@ module Validate
 
   def can_go_up?(start, length)
     rows = our_rows
-    index = rows.index(start[0]) + 1
+    row, column = split_location(start)
+    index = rows.index(row) + 1
     end_index = index - length
     return false if end_index < 0
     locations = populate_locations(start, "above", length, [start])
@@ -83,7 +83,8 @@ module Validate
 
   def can_go_down?(start, length)
     rows = our_rows
-    index = rows.index(start[0])
+    row, column = split_location(start)
+    index = rows.index(row)
     return false if index + length > board.size
     locations = populate_locations(start, "below", length, [start])
     return false unless no_overlap?(locations)
@@ -91,14 +92,16 @@ module Validate
   end
 
   def can_go_left?(start, length)
-    return false if start[1].to_i - length < 0
+    row, column = split_location(start)
+    return false if column.to_i - length < 0
     locations = populate_locations(start, "left", length, [start])
     return false unless no_overlap?(locations)
     true
   end
 
   def can_go_right?(start, length)
-    return false if start[1].to_i + length > board.size
+    row, column = split_location(start)
+    return false if column.to_i + length > board.size
     locations = populate_locations(start, "right", length, [start])
     return false unless no_overlap?(locations)
     true
@@ -126,8 +129,10 @@ module Validate
 
   def coordinates_sequential?(coordinates)
     coordinates.each_cons(2).all? do |this_loc,next_loc|
-      column_seq = next_loc[1].to_i == this_loc[1].to_i + 1
-      row_seq = letter_to_number(next_loc[0]) == letter_to_number(this_loc[0]) + 1
+      this_row, this_column = split_location(this_loc)
+      next_row, next_column = split_location(next_loc)
+      column_seq = next_column.to_i == this_column.to_i + 1
+      row_seq = letter_to_number(next_row) == letter_to_number(this_row) + 1
       column_seq || row_seq
     end
   end

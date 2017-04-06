@@ -31,7 +31,8 @@ class Human < Player
   end
 
   def validate_shot(target, text)
-    valid_location = validate_location(text)
+    row, column = split_location(text)
+    valid_location = validate_row(row.upcase) && validate_column(column)
     return false unless valid_location
     not_fired_at = target.location_not_targeted?(text)
     error_already_shot_there_message if !not_fired_at

@@ -14,7 +14,13 @@ class AI < Player
   end
 
   def sort_found_locations(locations)
-    locations.sort { |a,b| [ a[0], a[1] ] <=> [ b[0], b[1] ] }
+    locations.sort do |a,b|
+      a_row, a_column = split_location(a)
+      a_column = a_column.to_i
+      b_row, b_column = split_location(b)
+      b_column = b_column.to_i
+      [ a_row , a_column ] <=> [ b_row, b_column ]
+    end
   end
 
   def populate_locations(start, direction, length, locations)

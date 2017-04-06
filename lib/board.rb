@@ -84,12 +84,15 @@ class Board
     alphabet.index(letter.upcase)
   end
 
+  def split_location(readable)
+    row = readable[0]
+    column = readable.delete(row)
+    [row, column]
+  end
+
   def translate_location(readable)
     readable = readable.upcase
-    row = readable[0]
-    # column = readable[1..-1]
-    # readable.delete(row)
-    column = readable[1]
+    row, column = split_location(readable)
     jump_to_square(row, column)
   end
 end

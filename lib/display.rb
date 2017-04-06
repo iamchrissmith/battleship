@@ -13,6 +13,18 @@ module Display
     message
   end
 
+  def options_message
+    message = "Configure your game".blue.bold.underline
+    message += "\n\nWhat level you like to play at\n"
+    message += "(e)".green
+    message += "asy: 4x4 grid with two ships\n"
+    message += "(m)".yellow
+    message += "edium: 8x8 grid with three ships\n"
+    message += "(h)".red
+    message += "ard: 12x12 grid with four ships\n"
+    message
+  end
+
   def get_instructions
     File.read('./lib/instructions.txt')
   end

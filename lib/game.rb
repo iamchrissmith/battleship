@@ -59,9 +59,21 @@ class Game
   end
 
   def select_difficulty
-    difficulty = 4
-    num_ships = (difficulty / 4) + 1
-    [difficulty, num_ships]
+    puts options_message
+    difficulty = get_user_input
+    level = validate_options(difficulty)
+    num_ships = (level / 4) + 1
+    [level, num_ships]
+  end
+
+  def validate_options(difficulty)
+    return select_difficulty if !["e","m","h"].include?(difficulty)
+    difficulties = {
+      "e" => 4,
+      "m" => 8,
+      "h" => 12
+    }
+    difficulties[difficulty]
   end
 
   def make_players

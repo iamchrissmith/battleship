@@ -42,9 +42,6 @@ describe Human do
         expect { subject.validate_location("A2") }.to output("Ships cannot overlap.\n").to_stdout
       end
       after {subject.translate_location("A2").ship = nil}
-      it "should not allow too long shots" do
-        expect { subject.validate_location("A21") }.to output("Location can only be 2 chars long.\n").to_stdout
-      end
     end
   end
 
@@ -70,9 +67,6 @@ describe Human do
         expect { subject.validate_shot(@human, "0A") }.to output("All characters must be on the board\n").to_stdout
         expect { subject.validate_shot(@human, "E1") }.to output("All characters must be on the board\n").to_stdout
         expect { subject.validate_shot(@human, "A!") }.to output("All characters must be on the board\n").to_stdout
-      end
-      it "should not allow too long shots" do
-        expect { subject.validate_shot(@human, "A21") }.to output("Location can only be 2 chars long.\n").to_stdout
       end
     end
     context "must not already be fired at" do

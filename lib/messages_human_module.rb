@@ -12,7 +12,7 @@ module HumanMessages
   end
 
   def start_shot_message
-    puts "Enter the squares you would like to shoot (i.e. A1)"
+    puts "Enter the square you would like to shoot (i.e. A1)"
   end
 
   def shot_message(success)
