@@ -105,8 +105,8 @@ describe Square do
       before {subject.ship = Ship.new(2)}
       it "reports a hit" do
         expect(subject.hit?).to be true
-        expect(subject.status).to eq(:hit)
-        expect(subject.ship.life).to be(1)
+        expect(subject.status).to be :hit
+        expect(subject.ship.life).to eq 1
       end
     end
   end

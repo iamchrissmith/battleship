@@ -53,7 +53,7 @@ module Display
   end
 
   def get_empty_square(square, player)
-    if !square.ship.nil? # && player.is_a?(Human)
+    if !square.ship.nil? && player.is_a?(Human)
       output = "   ".colorize( :background => :white)
     else
       output = "   "
@@ -90,7 +90,7 @@ module Display
     own = @players[0]
     opponent = @players[1]
     length = own.board.size
-    # clear_screen
+    clear_screen
     puts board_boundary(length) + "\t" + board_boundary(length)
     puts board_owner(own.name, length) + "\t" + board_owner(opponent.name, length)
     puts board_columns(length) + "\t" + board_columns(length)

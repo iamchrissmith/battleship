@@ -86,6 +86,8 @@ class Board
 
   def translate_location(readable)
     row = readable[0]
+    # column = readable[1..-1]
+    # readable.delete(row)
     column = readable[1]
     jump_to_square(row, column)
   end

@@ -2,8 +2,8 @@ module Validate
   #stop navigating as though array... use Smart Squares :left,:right,etc
   def valid_directions(length, start)
     directions = []
-    directions << "up" if can_go_up?(start, length)
-    directions << "down" if can_go_down?(start, length)
+    directions << "above" if can_go_up?(start, length)
+    directions << "below" if can_go_down?(start, length)
     directions << "left" if can_go_left?(start, length)
     directions << "right" if can_go_right?(start, length)
     get_locations(length) if directions.length == 0
@@ -37,10 +37,6 @@ module Validate
     sequential?(coordinates) && long_enough?(entered_length, length)
   end
 
-  def error_only_two_char
-    puts "Location can only be 2 chars long."
-  end
-
   def validate_location(text)
     return !!error_only_two_char unless text.length == 2
     text = text.upcase
@@ -59,8 +55,6 @@ module Validate
     end
     true
   end
-
-  # Could be private
 
   def validate_row(row)
     unless row.is_a? String
@@ -81,12 +75,13 @@ module Validate
     end
     true
   end
-# Should I be adding 1 to can_go_up
+
   def can_go_up?(start, length)
     rows = our_rows
     index = rows.index(start[0]) + 1
-    return false if index - length < 0
-    locations = populate_locations(start, "up", length, [start])
+    end_index = index - length
+    return false if end_index < 0
+    locations = populate_locations(start, "above", length, [start])
     return false unless no_overlap?(locations)
     true
   end
@@ -95,7 +90,7 @@ module Validate
     rows = our_rows
     index = rows.index(start[0])
     return false if index + length > board.size
-    locations = populate_locations(start, "down", length, [start])
+    locations = populate_locations(start, "below", length, [start])
     return false unless no_overlap?(locations)
     true
   end

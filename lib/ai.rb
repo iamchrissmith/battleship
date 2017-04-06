@@ -18,6 +18,21 @@ class AI < Player
     sleep 0.5
   end
 
+  def shot_message(success)
+    puts "Oh no! The computer hit you!" if success
+    puts "Phew! It missed" if !success
+    sleep 1
+  end
+
+  def sunk_message(length)
+    puts "Look out the computer sunk your #{length.humanize}-unit ship!"
+  end
+
+  def victory_message(moves, minutes, seconds)
+    puts "Booo! You lost the game to the computer."
+    puts "It only too it #{moves[name]} moves and #{minutes} #{seconds} to defeat you."
+  end
+
   def get_locations(length)
     start = get_first_location
     ordinal_options = valid_directions(length, start).shuffle
@@ -28,7 +43,7 @@ class AI < Player
   end
 
   def sort_found_locations(locations)
-    locations.sort { |a,b| [ a[1], a[0] ] <=> [ b[1], b[0] ] }
+    locations.sort { |a,b| [ a[0], a[1] ] <=> [ b[0], b[1] ] }
   end
 
   def populate_locations(start, direction, length, locations)
@@ -39,23 +54,11 @@ class AI < Player
     end
     locations
   end
-# use smart squares' navigations
+
   def move(current, direction)
-    
-    case direction
-    when "up"
-      rows = our_rows
-      index = our_rows.index(current[0])
-      [rows[index - 1], current[1]]
-    when "down"
-      rows = our_rows
-      index = our_rows.index(current[0])
-      [rows[index + 1], current[1]]
-    when "left"
-      [current[0], (current[1].to_i - 1).to_s]
-    when "right"
-      [current[0], (current[1].to_i + 1).to_s]
-    end
+    current_square = translate_location(current)
+    next_square = current_square.neighbors[direction.to_sym]
+    "#{next_square.row}#{next_square.column}"
   end
 
   def get_first_location
@@ -65,15 +68,15 @@ class AI < Player
       column = get_random_column
       occupied = location_occupied?("#{row}#{column}")
     end
-    [row, column]
+    "#{row}#{column}"
   end
 
-  def get_target
+  def get_target(target)
     not_fired_at = false
     until not_fired_at
       row = get_random_row
       column = get_random_column
-      not_fired_at = location_not_targeted?("#{row}#{column}")
+      not_fired_at = target.location_not_targeted?("#{row}#{column}")
     end
     "#{row}#{column}"
   end

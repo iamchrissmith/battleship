@@ -1,16 +1,11 @@
 require 'pry'
 require './lib/player'
 require './lib/display'
+require './lib/message_module'
 
 class Human < Player
   include Display
-
-  def before_ship_placement_message
-    puts "You now need to layout your two ships."
-    puts "The first is two units long and the second is three units long."
-    puts "The grid has A1 at the top left and D4 at the bottom right."
-    puts "==============================================================="
-  end
+  include HumanMessages
 
   def get_locations(length)
     valid_coordinates = false
@@ -25,13 +20,15 @@ class Human < Player
     coordinates.map { |coordinate| coordinate}
   end
 
-  def get_target
+  def get_target(target)
     puts "Enter the squares you would like to shoot (i.e. A1)"
-    not_fired_at = false
-    until not_fired_at
+    valid_shot = false
+    until valid_shot
       target_text = get_user_input
-      return if target_text == ''
-      not_fired_at = location_not_targeted?(target_text)
+      # Validate other parts of the shot
+      not_fired_at = target.location_not_targeted?(target_text)
+      already_shot_there_message if !not_fired_at
+      valid_shot = not_fired_at # plus other validations
     end
     target_text
   end

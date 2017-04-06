@@ -52,12 +52,16 @@ class Game
   def start_game
     clear_screen
     # Ask how hard in the future (Beginner: size = 4 ships = 2)
-    difficulty = 4
-    num_ships = 2
-    board_options = [difficulty, num_ships]
+    board_options = select_difficulty
     make_players
     make_boards(board_options)
     play_game
+  end
+
+  def select_difficulty
+    difficulty = 4
+    num_ships = (difficulty / 4) + 1
+    [difficulty, num_ships]
   end
 
   def make_players
@@ -101,10 +105,15 @@ class Game
       @players.each.with_index do |player, index|
         sleep 1
         target = @players.fetch(index + 1, @players[0])
-        shot = player.shoot(target)
+        result = player.shoot(target)
         @moves[player.name] += 1
-        write_to_log(player.name, shot)
+        write_to_log(player.name, result)
         render_grids
+        if result[:sunk?]
+          player.sunk_message(result[:ship_length])
+        else
+          player.shot_message(result[:success?])
+        end
         if notify_all_sunk
           return player
         end
@@ -113,7 +122,10 @@ class Game
   end
 
   def write_to_log(name, shot)
-    @log << [@moves[name], name, shot[0], shot[1]]
+    entry = [@moves[name], name, shot[:where], shot[:success?]]
+    entry << shot[:sunk?] if shot[:sunk?]
+    entry << shot[:ship_length] if shot[:sunk?]
+    @log << entry
   end
 
   def end_game_sequence(winner)
@@ -121,7 +133,7 @@ class Game
     minutes = "#{((end_time - @start_time) / 60).to_i} min"
     seconds = " and #{((end_time - @start_time) % 60).to_i} sec"
     render_grids
-    puts "#{winner.name} won the game in #{@moves[winner.name]} moves and #{minutes} #{seconds}."
+    winner.victory_message(@moves, minutes, seconds)
     print @log
     exit
   end

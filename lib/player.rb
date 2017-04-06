@@ -1,8 +1,18 @@
 require './lib/validate_module'
+require 'forwardable'
+
 class Player
+  extend Forwardable
   include Validate
+
   attr_reader :name
   attr_accessor :board
+  def_delegator :@board, :build_board
+  def_delegator :@board, :all_sunk?
+  def_delegator :@board, :translate_location
+  def_delegator :@board, :letter_rows, :our_rows
+  def_delegator :@board, :letter_to_number
+  def_delegator :@board, :place_ship, :send_ship
 
   def initialize(name)
     @name = name
@@ -18,10 +28,13 @@ class Player
   end
 
   def shoot(target)
-    where = get_target
-    square = target.board.translate_location(where)
-    success = square.hit?
-    [where, success]
+    results = {}
+    results[:where] = get_target(target)
+    square = target.translate_location(results[:where])
+    results[:success?] = square.hit?
+    results[:sunk?] = square.ship.sunk? if results[:success?]
+    results[:ship_length] = square.ship.length if results[:sunk?]
+    results
   end
 
   def generate_ships(number)
@@ -31,29 +44,5 @@ class Player
       send_ship(locations)
       length += 1
     end
-  end
-
-  def send_ship(locations)
-    board.place_ship(locations)
-  end
-
-  def build_board
-    @board.build_board
-  end
-
-  def all_sunk?
-    @board.all_sunk?
-  end
-
-  def translate_location(readable)
-    @board.translate_location(readable)
-  end
-
-  def our_rows
-    @board.letter_rows
-  end
-
-  def letter_to_number(letter)
-    @board.letter_to_number(letter)
   end
 end

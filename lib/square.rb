@@ -10,6 +10,8 @@ class Square
   def initialize(row, column)
     @row = row
     @column = column
+    @ship = nil
+    @status = nil
 
     @neighbors = {
       above: nil,
@@ -17,18 +19,15 @@ class Square
       left: nil,
       right: nil
     }
-
-    @ship = nil
-    @status = nil
   end
 
   def hit?
-    if !@ship
+    if @ship.nil?
       @status = :miss
       false
     else
       @status = :hit
-      @ship.life -= 1
+      @ship.score_hit
       true
     end
   end
@@ -46,8 +45,8 @@ class Square
                       square.neighbors[:below])
     end
     while !square.nil? && square.column != column
-      square = go_in(square.column,
-                      column,
+      square = go_in(square.column.to_i,
+                      column.to_i,
                       square.neighbors[:left],
                       square.neighbors[:right])
     end

@@ -40,15 +40,15 @@ describe AI do
   describe ".get_locations" do
     context "in AI" do
       it "should generate random locations" do
-        expect(subject.get_locations(2).class).to be Array
+        expect(subject.get_locations(2).class).to eq Array
       end
       it "should be the right length" do
         expect(subject.get_locations(2).length).to be 2
       end
-      it "should be an array of arrays" do
+      it "should be an array of strings" do
         locations = subject.get_locations(2)
         locations.each do |location|
-          expect(location.class).to be Array
+          expect(location.class).to eq String
           expect(location.length).to be 2
         end
       end
@@ -58,22 +58,22 @@ describe AI do
   describe ".valid_directions" do
     context "AI must have valid ship alignment" do
       it "returns valid directions for A1" do
-        expect(subject.valid_directions(2, ["A","1"])).to include("down")
-        expect(subject.valid_directions(2, ["A","1"])).to include("right")
-        expect(subject.valid_directions(2, ["A","1"])).not_to include("up")
-        expect(subject.valid_directions(2, ["A","1"])).not_to include("left")
+        expect(subject.valid_directions(2, "A1")).to include("below")
+        expect(subject.valid_directions(2, "A1")).to include("right")
+        expect(subject.valid_directions(2, "A1")).not_to include("above")
+        expect(subject.valid_directions(2, "A1")).not_to include("left")
       end
       it "returns valid directions for D4" do
-        expect(subject.valid_directions(2, ["D","4"])).to include("up")
-        expect(subject.valid_directions(2, ["D","4"])).to include("left")
-        expect(subject.valid_directions(2, ["D","4"])).not_to include("down")
-        expect(subject.valid_directions(2, ["D","4"])).not_to include("right")
+        expect(subject.valid_directions(2, "D4")).to include("above")
+        expect(subject.valid_directions(2, "D4")).to include("left")
+        expect(subject.valid_directions(2, "D4")).not_to include("below")
+        expect(subject.valid_directions(2, "D4")).not_to include("right")
       end
       it "returns valid directions for B2" do
-        expect(subject.valid_directions(2, ["B","2"])).to include("up")
-        expect(subject.valid_directions(2, ["B","2"])).to include("left")
-        expect(subject.valid_directions(2, ["B","2"])).to include("down")
-        expect(subject.valid_directions(2, ["B","2"])).to include("right")
+        expect(subject.valid_directions(2, "B2")).to include("above")
+        expect(subject.valid_directions(2, "B2")).to include("left")
+        expect(subject.valid_directions(2, "B2")).to include("below")
+        expect(subject.valid_directions(2, "B2")).to include("right")
       end
     end
     context "AI ships cannot overlap" do
@@ -82,10 +82,10 @@ describe AI do
         subject.board.place_ship(["C2","D2"])
       end
       it "will not find overlapping horizontal locations" do
-        expect(subject.valid_directions(2, ["C","1"])).not_to include("up")
-        expect(subject.valid_directions(2, ["C","1"])).not_to include("right")
-        expect(subject.valid_directions(2, ["D","3"])).not_to include("left")
-        expect(subject.valid_directions(2, ["A","2"])).not_to include("down")
+        expect(subject.valid_directions(2, "C1")).not_to include("above")
+        expect(subject.valid_directions(2, "C1")).not_to include("right")
+        expect(subject.valid_directions(2, "D3")).not_to include("left")
+        expect(subject.valid_directions(2, "A2")).not_to include("below")
       end
     end
   end
@@ -93,14 +93,14 @@ describe AI do
   describe ".populate_locations" do
     context "gets sequential locations in the right direction" do
       it "returns the next valid location" do
-        locations = [["A","1"]]
-        expect(subject.populate_locations(["A","1"],"right",2,locations)).to eq [["A","1"], ["A","2"]]
-        locations = [["A","1"]]
-        expect(subject.populate_locations(["A","1"],"down",2, locations)).to eq [["A","1"], ["B","1"]]
-        locations = [["A","2"]]
-        expect(subject.populate_locations(["A","2"],"left",2, locations)).to eq [["A","2"], ["A","1"]]
-        locations = [["B","1"]]
-        expect(subject.populate_locations(["B","1"],"up",2, locations)).to eq [["B","1"], ["A","1"]]
+        locations = ["A1"]
+        expect(subject.populate_locations("A1","right",2,locations)).to eq ["A1", "A2"]
+        locations = ["A1"]
+        expect(subject.populate_locations("A1","below",2, locations)).to eq ["A1", "B1"]
+        locations = ["A2"]
+        expect(subject.populate_locations("A2","left",2, locations)).to eq ["A2", "A1"]
+        locations = ["B1"]
+        expect(subject.populate_locations("B1","above",2, locations)).to eq ["B1", "A1"]
       end
     end
   end
@@ -113,6 +113,23 @@ describe AI do
         expect(subject.board.ships[0].life).to be 2
         expect(subject.board.ships[1].life).to be 3
       end
+    end
+  end
+
+  describe ".sort_found_locations" do
+    it "sorts an array properly" do
+      expect(subject.sort_found_locations(["A1", "A2", "A3"])).to eq ["A1", "A2", "A3"]
+      expect(subject.sort_found_locations(["A3", "A2", "A1"])).to eq ["A1", "A2", "A3"]
+      expect(subject.sort_found_locations(["A2", "A1", "A3"])).to eq ["A1", "A2", "A3"]
+
+      expect(subject.sort_found_locations(["B1", "B2", "B3"])).to eq ["B1", "B2", "B3"]
+      expect(subject.sort_found_locations(["B3", "B2", "B1"])).to eq ["B1", "B2", "B3"]
+      expect(subject.sort_found_locations(["B2", "B1", "B3"])).to eq ["B1", "B2", "B3"]
+
+      expect(subject.sort_found_locations(["A1", "B2", "C3"])).to eq ["A1", "B2", "C3"]
+      expect(subject.sort_found_locations(["A3", "B2", "C1"])).to eq ["A3", "B2", "C1"]
+      expect(subject.sort_found_locations(["D2", "C1", "A3"])).to eq ["A3", "C1", "D2"]
+
     end
   end
 end
