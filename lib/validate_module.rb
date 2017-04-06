@@ -43,13 +43,13 @@ module Validate
 
   def validate_location(text)
     return !!error_only_two_char unless text.length == 2
+    text = text.upcase
     # break these into series of helper methods
-    coordinates = text.split('')
-    row = coordinates[0].upcase
+    row = text[0].upcase
     valid_row = validate_row(row)
     return false unless valid_row
 
-    column = coordinates[1]
+    column = text[1]
     valid_column = validate_column(column)
     return false unless valid_column
 
@@ -67,7 +67,7 @@ module Validate
       puts "First character must be a Letter"
       return false
     end
-    unless board.letter_to_number(row).is_a? Integer
+    unless our_rows.include?(row)
       puts "First character must be on the board"
       return false
     end
@@ -137,7 +137,7 @@ module Validate
   def coordinates_sequential?(coordinates)
     coordinates.each_cons(2).all? do |this_loc,next_loc|
       column_seq = next_loc[1].to_i == this_loc[1].to_i + 1
-      row_seq = board.letter_to_number(next_loc[0]) == board.letter_to_number(this_loc[0]) + 1
+      row_seq = letter_to_number(next_loc[0]) == letter_to_number(this_loc[0]) + 1
       column_seq || row_seq
     end
   end

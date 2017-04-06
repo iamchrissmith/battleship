@@ -41,6 +41,7 @@ class AI < Player
   end
 # use smart squares' navigations
   def move(current, direction)
+    
     case direction
     when "up"
       rows = our_rows
@@ -75,10 +76,6 @@ class AI < Player
       not_fired_at = location_not_targeted?("#{row}#{column}")
     end
     "#{row}#{column}"
-  end
-
-  def our_rows
-    board.letter_rows
   end
 
   def get_random_row

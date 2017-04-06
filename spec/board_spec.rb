@@ -27,11 +27,11 @@ describe Board do
     context "when passed human coordinate" do
       it "returns the right square" do
         expect(subject.translate_location("A1").class).to be Square
-        expect(subject.translate_location("A1").row).to be 0
-        expect(subject.translate_location("A1").column).to be 0
+        expect(subject.translate_location("A1").row).to eq "A"
+        expect(subject.translate_location("A1").column).to eq "1"
         expect(subject.translate_location("D4").class).to be Square
-        expect(subject.translate_location("D4").row).to be 3
-        expect(subject.translate_location("D4").column).to be 3
+        expect(subject.translate_location("D4").row).to eq "D"
+        expect(subject.translate_location("D4").column).to eq "4"
       end
     end
   end
@@ -39,23 +39,23 @@ describe Board do
   describe ".jump_to_square" do
     context "we can find a square from the board" do
       it "returns the square when coordinates are entered" do
-        expect(subject.jump_to_square(0,0).class).to eq(Square)
-        expect(subject.jump_to_square(0,0).row).to eq(0)
-        expect(subject.jump_to_square(0,0).column).to eq(0)
-        expect(subject.jump_to_square(1,2).class).to eq(Square)
-        expect(subject.jump_to_square(1,2).row).to eq(1)
-        expect(subject.jump_to_square(1,2).column).to eq(2)
+        expect(subject.jump_to_square("A","1").class).to eq(Square)
+        expect(subject.jump_to_square("A","1").row).to eq "A"
+        expect(subject.jump_to_square("A","1").column).to eq "1"
+        expect(subject.jump_to_square("B","3").class).to eq(Square)
+        expect(subject.jump_to_square("B","3").row).to eq "B"
+        expect(subject.jump_to_square("B","3").column).to eq "3"
       end
       it "returns nil for invalid coordinates" do
-        expect(subject.jump_to_square(4,4)).to be_nil
+        expect(subject.jump_to_square("E","5")).to be_nil
       end
       it "returns the square when starting on right" do
-        start = subject.jump_to_square(2,2)
-        expect(start.row).to eq(2)
-        expect(start.column).to eq(2)
-        expect(subject.jump_to_square(0,0,start).class).to eq(Square)
-        expect(subject.jump_to_square(0,0,start).row).to eq(0)
-        expect(subject.jump_to_square(0,0,start).column).to eq(0)
+        start = subject.jump_to_square("C","3")
+        expect(start.row).to eq("C")
+        expect(start.column).to eq("3")
+        expect(subject.jump_to_square("A","1",start).class).to eq(Square)
+        expect(subject.jump_to_square("A","1",start).row).to eq("A")
+        expect(subject.jump_to_square("A","1",start).column).to eq("1")
       end
     end
   end
@@ -71,13 +71,13 @@ describe Board do
         expect(subject.ships[0].life).to eq(2)
       end
       it "assigns the ship to the squares" do
-        expect(subject.jump_to_square(0,0).ship).to eq(@new_ship)
-        expect(subject.jump_to_square(0,1).ship).to eq(@new_ship)
+        expect(subject.jump_to_square("A","1").ship).to eq(@new_ship)
+        expect(subject.jump_to_square("A","2").ship).to eq(@new_ship)
       end
     end
   end
 
-  describe ".letter_to_number" do
+  skip describe ".letter_to_number" do
     context "receives a letter" do
       it "returns the index of a valid letter" do
         expect(subject.letter_to_number("A")).to be 0

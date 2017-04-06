@@ -88,7 +88,7 @@ describe Display do
     end
     context ".get_shot_square" do
       before do
-        @hit_square = @owner.board.jump_to_square(0,0)
+        @hit_square = @owner.board.jump_to_square("A","1")
         @hit_square.ship = Ship.new(1)
         @hit_square.hit?
       end
@@ -96,7 +96,7 @@ describe Display do
         expect(subject.get_shot_square(@hit_square)).to eq("\e[0;39;41m H \e[0m")
       end
       before do
-        @miss_square = @owner.board.jump_to_square(0,1)
+        @miss_square = @owner.board.jump_to_square("A","2")
         @miss_square.hit?
       end
       it "should return M" do
@@ -105,7 +105,7 @@ describe Display do
     end
     context ".get_empty_square" do
       it "should return '  '" do
-        expect(subject.get_empty_square(@owner.board.jump_to_square(1,1), @owner)).to eq ("   ")
+        expect(subject.get_empty_square(@owner.board.jump_to_square("B","2"), @owner)).to eq ("   ")
       end
     end
   end

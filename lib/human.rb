@@ -22,7 +22,7 @@ class Human < Player
       valid_together = validate_group(coordinates, length)
       valid_coordinates = each_valid && valid_together
     end
-    coordinates.map { |coordinate| coordinate.split('')}
+    coordinates.map { |coordinate| coordinate}
   end
 
   def get_target

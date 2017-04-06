@@ -28,7 +28,7 @@ describe AI do
           expect(["1","2","3","4"]).to include(subject.get_first_location[1])
         end
       end
-      before {subject.board.jump_to_square(0,0).ship = Ship.new(1)}
+      before {subject.translate_location("A1").ship = Ship.new(1)}
       it "should not already be occupied" do
         100.times do
           expect(subject.get_first_location).not_to eq(["A","1"])

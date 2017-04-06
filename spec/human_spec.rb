@@ -23,11 +23,11 @@ describe Human do
   describe ".validate_location" do
     context "compares location to board" do
       it "should report true" do
-        expect(subject.validate_location("A1")).to be true # A1
-        expect(subject.validate_location("a1")).to be true # a1
-        expect(subject.validate_location("B2")).to be true # B2
-        expect(subject.validate_location("C3")).to be true # C3
-        expect(subject.validate_location("D4")).to be true # D4
+        expect(subject.validate_location("A1")).to be true
+        expect(subject.validate_location("a1")).to be true
+        expect(subject.validate_location("B2")).to be true
+        expect(subject.validate_location("C3")).to be true
+        expect(subject.validate_location("D4")).to be true
       end
       it "should report error for invalid entries" do
         expect { subject.validate_location("E1") }.to output("First character must be on the board\n").to_stdout
@@ -56,22 +56,16 @@ describe Human do
     skip context "receives input from user" do
       it "keeps asking until it receives valid ship placement" do
         allow($stdin).to receive(:gets).and_return('A5 A6')
-        binding.pry
         expect{subject.get_locations(2)}.to output("Second character must be on the board\n").to_stdout # Out of Range Number
         allow($stdin).to receive(:gets).and_return('E1 D1')
-binding.pry
         expect{subject.get_locations(2)}.to output("First character must be on the board\n").to_stdout # Out of Range Letter
         allow($stdin).to receive(:gets).and_return('A! A2')
-binding.pry
         expect{subject.get_locations(2)}.to output("First character must be on the board\n").to_stdout # Punctuation
         allow($stdin).to receive(:gets).and_return('A1 A3')
-binding.pry
         expect{subject.get_locations(2)}.to output("Location must be sequential in order (i.e. A1 A2 not A2 A1).\n").to_stdout # Not connected
         allow($stdin).to receive(:gets).and_return('A2 A1')
-binding.pry
         expect{subject.get_locations(2)}.to output("Location must be sequential in order (i.e. A1 A2 not A2 A1).\n").to_stdout # Out of order
         allow($stdin).to receive(:gets).and_return('A1 A2')
-binding.pry
         expect(subject.get_locations(2)).to be == [["A", "1"], ["A", "2"]]
       end
     end

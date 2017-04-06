@@ -48,4 +48,12 @@ class Player
   def translate_location(readable)
     @board.translate_location(readable)
   end
+
+  def our_rows
+    @board.letter_rows
+  end
+
+  def letter_to_number(letter)
+    @board.letter_to_number(letter)
+  end
 end

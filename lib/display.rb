@@ -72,8 +72,9 @@ module Display
 
   def get_board_row(row, player)
     row_key = ("A".."Z").to_a
+    row_letter = row_key[row]
     output = " #{row_key[row]} "
-    square = player.board.jump_to_square(row, 0)
+    square = player.board.jump_to_square(row_letter, "1")
     until square.nil?
       if !square.status.nil?
         output += get_shot_square(square)

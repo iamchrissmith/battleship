@@ -29,8 +29,8 @@ class Board
 
   def build_square(row,column,grid)
     letter_row = get_letter(row)
-    # square = Square.new(letter_row,column)
-    square = Square.new(row,column)
+    column_name = (column + 1).to_s
+    square = Square.new(letter_row,column_name)
     @root = square if @root.nil?
     assign_horizontal_neighbor(row, column, square, grid) if column > 0
     assign_vertical_neighbor(row, column, square, grid) if row > 0
@@ -51,7 +51,7 @@ class Board
 
   def place_ship(locations)
     squares = locations.map do |location|
-      translate_location(location)
+      jump_to_square(location[0],location[1])
     end
     ship = Ship.new(squares.length)
     @ships << ship
@@ -85,8 +85,8 @@ class Board
   end
 
   def translate_location(readable)
-    row = letter_to_number(readable[0])
-    column = readable[1].to_i - 1
+    row = readable[0]
+    column = readable[1]
     jump_to_square(row, column)
   end
 end
