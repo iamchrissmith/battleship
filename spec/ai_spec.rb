@@ -37,6 +37,41 @@ describe AI do
     end
   end
 
+  describe "shooting" do
+    before do
+      @human = Human.new("FiringDummy")
+      @human.board = Board.new(4);
+      @human.build_board
+    end
+    describe ".get_target" do
+      context "AI generates valid firing positions" do
+        it "should be between A and D and 1 and 4" do
+          100.times do
+            expect(["A","B","C","D"]).to include(subject.get_target(@human)[0])
+            expect(["1","2","3","4"]).to include(subject.get_target(@human)[1])
+          end
+        end
+        before {@human.translate_location("A1").hit?}
+        it "should not already be fired at" do
+          100.times do
+            expect(subject.get_target(@human)).not_to eq("A1")
+          end
+        end
+      end
+    end
+    describe ".shoot" do
+      context "AI returns proper results for a shot" do
+        it "should have a valid :where" do
+          expect(["A","B","C","D"]).to include(subject.shoot(@human)[:where][0])
+          expect(["1","2","3","4"]).to include(subject.shoot(@human)[:where][1])
+        end
+        it "should not report :success if no hit" do
+          expect(subject.shoot(@human)[:success?]).to be false
+        end
+      end
+    end
+  end
+
   describe ".get_locations" do
     context "in AI" do
       it "should generate random locations" do
@@ -129,7 +164,24 @@ describe AI do
       expect(subject.sort_found_locations(["A1", "B2", "C3"])).to eq ["A1", "B2", "C3"]
       expect(subject.sort_found_locations(["A3", "B2", "C1"])).to eq ["A3", "B2", "C1"]
       expect(subject.sort_found_locations(["D2", "C1", "A3"])).to eq ["A3", "C1", "D2"]
+    end
+  end
 
+  describe ".shot_message" do
+    it "returns hit message when passed true" do
+      expect{subject.shot_message(true)}.to output("Oh no! The computer hit you!\n").to_stdout
+    end
+    it "returns miss message when passed true" do
+      expect{subject.shot_message(false)}.to output("Phew! It missed\n").to_stdout
+    end
+  end
+
+  describe ".sunk_message" do
+    it "returns message with proper ship length" do
+      expect{subject.sunk_message(2)}.to output("Look out the computer sunk your two-unit ship!\n").to_stdout
+    end
+    it "returns message with proper ship length" do
+      expect{subject.sunk_message(3)}.to output("Look out the computer sunk your three-unit ship!\n").to_stdout
     end
   end
 end

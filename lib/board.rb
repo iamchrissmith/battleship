@@ -85,6 +85,7 @@ class Board
   end
 
   def translate_location(readable)
+    readable = readable.upcase
     row = readable[0]
     # column = readable[1..-1]
     # readable.delete(row)

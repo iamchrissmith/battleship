@@ -37,6 +37,51 @@ describe Human do
         expect { subject.validate_location("E1") }.to output("All characters must be on the board\n").to_stdout
         expect { subject.validate_location("A!") }.to output("All characters must be on the board\n").to_stdout
       end
+      before {subject.translate_location("A2").ship = Ship.new(1)}
+      it "should not already be occupied" do
+        expect { subject.validate_location("A2") }.to output("Ships cannot overlap.\n").to_stdout
+      end
+      after {subject.translate_location("A2").ship = nil}
+      it "should not allow too long shots" do
+        expect { subject.validate_location("A21") }.to output("Location can only be 2 chars long.\n").to_stdout
+      end
+    end
+  end
+
+  describe ".validate_shot" do
+    before do
+      @human = Human.new("FiringDummy")
+      @human.board = Board.new(4);
+      @human.build_board
+      @human.translate_location("A2").hit?
+    end
+    context "the human shot must be valid on the board" do
+      it "should report true" do
+        expect(subject.validate_shot(@human, "A1")).to be true
+        expect(subject.validate_shot(@human, "a1")).to be true
+        expect(subject.validate_shot(@human, "B2")).to be true
+        expect(subject.validate_shot(@human, "C3")).to be true
+        expect(subject.validate_shot(@human, "D4")).to be true
+      end
+      it "should report error for invalid entries" do
+        expect { subject.validate_shot(@human, "E1") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_shot(@human, "A5") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_shot(@human, "A0") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_shot(@human, "0A") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_shot(@human, "E1") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_shot(@human, "A!") }.to output("All characters must be on the board\n").to_stdout
+      end
+      it "should not allow too long shots" do
+        expect { subject.validate_shot(@human, "A21") }.to output("Location can only be 2 chars long.\n").to_stdout
+      end
+    end
+    context "must not already be fired at" do
+      before do
+        @human.translate_location("A2").hit?
+      end
+      it "returns false for fired at square" do
+        expect { subject.validate_shot(@human, "A2") }.to output("I'm sorry, but you're already targeted that location.\nPlease enter another target.\n").to_stdout
+      end
     end
   end
 
@@ -117,6 +162,24 @@ describe Human do
         expect { subject.validate_each_coordinate(["A5","A2"]) }.to output("All characters must be on the board\n").to_stdout
         expect { subject.validate_each_coordinate(["A2","A5"]) }.to output("All characters must be on the board\n").to_stdout
       end
+    end
+  end
+
+  describe ".ship_placement_message" do
+    it "returns message with proper ship length" do
+      expect{subject.ship_placement_message(2)}.to output("Enter the squares for the two-unit ship:\n").to_stdout
+    end
+    it "returns message with proper ship length" do
+      expect{subject.ship_placement_message(3)}.to output("Enter the squares for the three-unit ship:\n").to_stdout
+    end
+  end
+
+  describe ".sunk_message" do
+    it "returns message with proper ship length" do
+      expect{subject.sunk_message(2)}.to output("Wonderful! You sunk a two-unit ship!\n").to_stdout
+    end
+    it "returns message with proper ship length" do
+      expect{subject.sunk_message(3)}.to output("Wonderful! You sunk a three-unit ship!\n").to_stdout
     end
   end
 end

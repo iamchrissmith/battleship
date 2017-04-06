@@ -25,11 +25,16 @@ class Human < Player
     valid_shot = false
     until valid_shot
       target_text = get_user_input
-      # Validate other parts of the shot
-      not_fired_at = target.location_not_targeted?(target_text)
-      error_already_shot_there_message if !not_fired_at
-      valid_shot = not_fired_at # plus other validations
+      valid_shot = validate_shot(target, target_text)
     end
     target_text
+  end
+
+  def validate_shot(target, text)
+    valid_location = validate_location(text)
+    return false unless valid_location
+    not_fired_at = target.location_not_targeted?(text)
+    error_already_shot_there_message if !not_fired_at
+    not_fired_at
   end
 end

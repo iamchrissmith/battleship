@@ -20,7 +20,7 @@ module HumanMessages
     puts "Better luck next time..." if !success
     puts "--------"
     puts "Press ENTER to end your turn"
-    gets.chomp
+    get_user_input
   end
 
   def sunk_message(length)
