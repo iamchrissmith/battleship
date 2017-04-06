@@ -30,12 +30,12 @@ describe Human do
         expect(subject.validate_location("D4")).to be true
       end
       it "should report error for invalid entries" do
-        expect { subject.validate_location("E1") }.to output("First character must be on the board\n").to_stdout
-        expect { subject.validate_location("A5") }.to output("Second character must be on the board\n").to_stdout
-        expect { subject.validate_location("A0") }.to output("Second character must be on the board\n").to_stdout
-        expect { subject.validate_location("0A") }.to output("First character must be on the board\n").to_stdout
-        expect { subject.validate_location("E1") }.to output("First character must be on the board\n").to_stdout
-        expect { subject.validate_location("A!") }.to output("Second character must be on the board\n").to_stdout
+        expect { subject.validate_location("E1") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_location("A5") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_location("A0") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_location("0A") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_location("E1") }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_location("A!") }.to output("All characters must be on the board\n").to_stdout
       end
     end
   end
@@ -56,11 +56,11 @@ describe Human do
     skip context "receives input from user" do
       it "keeps asking until it receives valid ship placement" do
         allow($stdin).to receive(:gets).and_return('A5 A6')
-        expect{subject.get_locations(2)}.to output("Second character must be on the board\n").to_stdout # Out of Range Number
+        expect{subject.get_locations(2)}.to output("All characters must be on the board\n").to_stdout # Out of Range Number
         allow($stdin).to receive(:gets).and_return('E1 D1')
-        expect{subject.get_locations(2)}.to output("First character must be on the board\n").to_stdout # Out of Range Letter
+        expect{subject.get_locations(2)}.to output("All characters must be on the board\n").to_stdout # Out of Range Letter
         allow($stdin).to receive(:gets).and_return('A! A2')
-        expect{subject.get_locations(2)}.to output("First character must be on the board\n").to_stdout # Punctuation
+        expect{subject.get_locations(2)}.to output("All characters must be on the board\n").to_stdout # Punctuation
         allow($stdin).to receive(:gets).and_return('A1 A3')
         expect{subject.get_locations(2)}.to output("Location must be sequential in order (i.e. A1 A2 not A2 A1).\n").to_stdout # Not connected
         allow($stdin).to receive(:gets).and_return('A2 A1')
@@ -114,8 +114,8 @@ describe Human do
         expect(subject.validate_each_coordinate(["A1","A2"])).to be true
       end
       it "reports invalid for A5 A2 and A2 A5" do
-        expect { subject.validate_each_coordinate(["A5","A2"]) }.to output("Second character must be on the board\n").to_stdout
-        expect { subject.validate_each_coordinate(["A2","A5"]) }.to output("Second character must be on the board\n").to_stdout
+        expect { subject.validate_each_coordinate(["A5","A2"]) }.to output("All characters must be on the board\n").to_stdout
+        expect { subject.validate_each_coordinate(["A2","A5"]) }.to output("All characters must be on the board\n").to_stdout
       end
     end
   end

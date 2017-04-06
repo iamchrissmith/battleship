@@ -1,5 +1,4 @@
 module Validate
-  #stop navigating as though array... use Smart Squares :left,:right,etc
   def valid_directions(length, start)
     directions = []
     directions << "above" if can_go_up?(start, length)
@@ -50,19 +49,15 @@ module Validate
     return false unless valid_column
 
     if location_occupied?(text)
-      puts "Ships cannot overlap."
+      error_ships_cannot_overlap
       return false
     end
     true
   end
 
   def validate_row(row)
-    unless row.is_a? String
-      puts "First character must be a Letter"
-      return false
-    end
     unless our_rows.include?(row)
-      puts "First character must be on the board"
+      error_characters_must_be_on_board
       return false
     end
     true
@@ -70,7 +65,7 @@ module Validate
 
   def validate_column(column)
     unless ("1"..board.size.to_s).include?(column)
-      puts "Second character must be on the board"
+      error_characters_must_be_on_board
       return false
     end
     true
@@ -113,10 +108,10 @@ module Validate
     long_enough = entered - length
     return true if (long_enough == 0)
     if (long_enough < 0)
-      puts "Too Short. This is a #{length.humanize}-unit ship"
+      error_too_short(length)
       return false
     elsif (long_enough > 0)
-      puts "Too Long. This is a #{length.humanize}-unit ship"
+      error_too_long(length)
       return false
     end
   end
@@ -125,7 +120,7 @@ module Validate
     if coordinates_sequential?(coordinates)
       return true
     end
-    puts "Location must be sequential in order (i.e. A1 A2 not A2 A1)."
+    error_must_be_sequential
     false
   end
 

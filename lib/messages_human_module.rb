@@ -7,6 +7,14 @@ module HumanMessages
     puts "==============================================================="
   end
 
+  def ship_placement_message(length)
+    puts "Enter the squares for the #{length.humanize}-unit ship:"
+  end
+
+  def start_shot_message
+    puts "Enter the squares you would like to shoot (i.e. A1)"
+  end
+
   def shot_message(success)
     puts "Congrats, a hit!" if success
     puts "Better luck next time..." if !success
@@ -15,20 +23,16 @@ module HumanMessages
     gets.chomp
   end
 
-  def already_shot_there_message
-    puts "I'm sorry, but you're already targeted that location."
-    puts "Please enter another target."
-  end
-
-  def error_only_two_char
-    puts "Location can only be 2 chars long."
-  end
-
   def sunk_message(length)
     puts "Wonderful! You sunk a #{length.humanize}-unit ship!"
   end
 
   def victory_message(moves, minutes, seconds)
     puts "Hurray! You won the game in #{moves[name]} moves and #{minutes} #{seconds}."
+  end
+
+  def error_already_shot_there_message
+    puts "I'm sorry, but you're already targeted that location."
+    puts "Please enter another target."
   end
 end

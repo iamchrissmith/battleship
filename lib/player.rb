@@ -1,9 +1,11 @@
 require './lib/validate_module'
+require './lib/messages_validate_module'
 require 'forwardable'
 
 class Player
   extend Forwardable
   include Validate
+  include ValidateMessages
 
   attr_reader :name
   attr_accessor :board
