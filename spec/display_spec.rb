@@ -37,12 +37,9 @@ describe Display do
   describe '.get_user_input' do
     context "ask for the user's input" do
       it "should return user input command" do
-        allow($stdin).to receive(:gets).and_return('i')
-        expect(subject.get_user_input).to eq 'i'
-        allow($stdin).to receive(:gets).and_return('p')
-        expect(subject.get_user_input).to eq 'p'
-        allow($stdin).to receive(:gets).and_return('q')
-        expect(subject.get_user_input).to eq 'q'
+        expect(subject.get_user_input('i')).to eq 'i'
+        expect(subject.get_user_input('p')).to eq 'p'
+        expect(subject.get_user_input('q')).to eq 'q'
       end
     end
   end
