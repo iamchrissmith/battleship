@@ -51,7 +51,8 @@ class Board
 
   def place_ship(locations)
     squares = locations.map do |location|
-      jump_to_square(location[0],location[1])
+      row, column = split_location(location)
+      jump_to_square(row,column)
     end
     ship = Ship.new(squares.length)
     @ships << ship

@@ -61,7 +61,7 @@ describe Board do
   end
 
   describe ".place_ship" do
-    before {@new_ship = subject.place_ship([["A","1"], ["A","2"]])}
+    before {@new_ship = subject.place_ship(["A1", "A2"])}
     context "need to place a ship on the board" do
       it "creates the ship" do
         expect(subject.ships[0]).to eq(@new_ship)
@@ -90,8 +90,8 @@ describe Board do
 
   describe "sinking ships" do
     before {
-      subject.place_ship([["A","1"], ["A","2"]])
-      subject.place_ship([["B","1"], ["B","2"]])
+      subject.place_ship(["A1", "A2"])
+      subject.place_ship(["B1", "B2"])
     }
     describe ".all_sunk? and #sunk_ships" do
       context "initially no ships are sunk" do

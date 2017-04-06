@@ -80,7 +80,7 @@ describe Human do
   end
 
   describe ".location_occupied?" do
-    before { subject.send_ship([["A","1"], ["A","2"]]) }
+    before { subject.send_ship(["A1", "A2"]) }
     context "checking if square is already occupied" do
       it "reports falsey for occupation" do
         expect(subject.location_occupied?("A1")).to be_truthy
